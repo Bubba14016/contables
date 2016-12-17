@@ -66,8 +66,8 @@
             function sumarDebe() {
                 var total=0;
                 for (var i = 1; i <=10; i++) {
-                    if (document.getElementById('debe'+i).value!=0) {
-                    total+=document.getElementById('debe'+i).value;
+                    if (document.getElementById('debe'+i).value!="") {
+                    total+=parseFloat(document.getElementById('debe'+i).value);
                 	}
                 }
                 
@@ -76,8 +76,8 @@
             function sumarHaber() {
                var total=0;
                 for (var i = 1; i <=10; i++) {
-                    if (document.getElementById('haber'+i).value!=0) {
-                    total+=document.getElementById('haber'+i).value;
+                    if (document.getElementById('haber'+i).value!="") {
+                    total+=parseFloat(document.getElementById('haber'+i).value);
                 }
                 }
                 return total;
@@ -85,11 +85,10 @@
             function procesar() {
                 var debe = sumarDebe();
                 var haber = sumarHaber();
-                if(debe==haber){
+                if(debe-haber==0){
                     document.partidas.submit();
 
                 }else{
-
                      swal("Revisar Cuentas", "Cargo y abono diferentes", "error");
                 }
             }
@@ -111,6 +110,7 @@
     </head>
 
     <body>
+    <?php include"menu.php"; ?>
    <form action="" method="post" name="partidas" id="partidas">
     <div class="imagenFlotante">
         <a  name="add" id="add" data-toggle="modal" href="#fecha1" class="btn btn-primary">Procesar</a>
@@ -141,13 +141,14 @@
                     <div class="panel">
                         <div class="panel-heading text-center"><h1>Partida <?php
                             include("../config/conexion.php");
-                            $query_s = pg_query($conexion, "select count(idtransaccion) from transacciones ");
+                           $query_s = pg_query($conexion, "select count(idtransaccion) from transacciones ");
                             while ($fila = pg_fetch_array($query_s)) {
                                 $num = $fila[0] + 1;
                                 echo " $num";
-                            }
+                                 }
                             ?></h1></div>
-                        <div class="panel-body" id="partida">
+                        <div class="panel-body" id="partida"> 
+                           
                             <div class="row">
                                 <div class="col-md-6">Cuenta</div>
                                 <div class="col-md-3">Debe</div>
@@ -205,7 +206,7 @@
 				
 					}
 					$id;
-   					 $query_s = pg_query($conexion, "select idtransaccion from transacciones order by idtransaccion limit 1");
+   					 $query_s = pg_query($conexion, "select idtransaccion from transacciones order by idtransaccion desc limit 1");
                             while ($fila = pg_fetch_array($query_s)) {
 							$id=$fila[0];
                             }
