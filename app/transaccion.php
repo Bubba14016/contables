@@ -171,21 +171,94 @@
     </body>
 </html>
 <?php
-	
+  	if(isset($_REQUEST['fecha'])){
+  	$fecha=$_REQUEST['fecha'];
+	$debe;
+	$haber;
+	$codigo;
     for($i=0;$i<10;$i++){
-
+    	if (isset($_POST['codigo'.($i+1)])&&$_POST['codigo'.($i+1)]!="") {
+            $codigo[]=$_REQUEST['codigo'.($i+1)];
+            
+        }
         if (isset($_POST['debe'.($i+1)])&&$_POST['debe'.($i+1)]!="") {
             $debe[]=$_REQUEST['debe'.($i+1)];
-            echo $debe[($i)]."<br>"; 
+            $haber[]=0;
+            
         }
        if(isset($_POST['haber'.($i+1)])&&$_POST['haber'.($i+1)]!=""){
         	$haber[]=$_REQUEST['haber'.($i+1)];
-        echo $haber[($i-1)]."<br>"; 
+        	$debe[]=0;
+       
 }
     }
-    if(isset($_REQUEST['fecha'])){
-    $fecha=$_REQUEST['fecha'];
-    echo $fecha;
+  		 include("../config/conexion.php");
+                            $result = pg_query($conexion, "insert into transacciones(fecha) values('$fecha')");
+                                                          
+                            if(!$result){
+				pg_query("rollback");
+				echo "<script language='javascript'>";
+				echo "swal('Uuuuuuyyyyiiii','Datos no almacenados', 'error');";
+				echo "</script>";
+				}else{
+					pg_query("commit");
+				
+					}
+					$id;
+   					 $query_s = pg_query($conexion, "select idtransaccion from transacciones order by idtransaccion limit 1");
+                            while ($fila = pg_fetch_array($query_s)) {
+							$id=$fila[0];
+                            }
+                            $bandera=true;
+   			for ($i=0; $i < sizeof($codigo); $i++) { 
+   				$cod=cortar($codigo[$i]);
+   				if ($debe[$i]!=0) {
+   					 $result = pg_query($conexion, "insert into cuentas(codigo, idtransaccion, monto, c_a) values('$cod','$id', $debe[$i], 1)");
+   					 if(!$result){
+				pg_query("rollback");
+				$bandera=false;
+				echo "<script language='javascript'>";
+				echo "swal('Uuuuuuyyyyiiii','Datos no almacenados', 'error');";
+				echo "</script>";
+				break;
+				}else{
+					pg_query("commit");
+				
+					}
+   				}else{
+   					if ($haber!=0) {
+   						 $result = pg_query($conexion, "insert into cuentas(codigo, idtransaccion, monto, c_a) values('$cod','$id', $haber[$i], 2)");
+   					 if(!$result){
+				pg_query("rollback");
+				$bandera=false;
+				echo "<script language='javascript'>";
+				echo "swal('Uuuuuuyyyyiiii','Datos no almacenados', 'error');";
+				echo "</script>";
+				break;
+				}else{
+					pg_query("commit");
+				
+					}
+   					}
+   				}
+   				
+   			}
+   			if ($bandera) {
+   				echo "<script language='javascript'>";
+				echo "swal('Hey...','Datos Almacenados', 'success');";
+				//echo "location.href='transaccion.php';";
+				echo "</script>";
+   			}
+
+
+
     }
+
+    	 function cortar($palabra){
+
+		$parte = explode(" ",$palabra); 
+
+		return $parte[0];
+    	}
   
 ?>
