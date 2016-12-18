@@ -102,9 +102,11 @@
             			break;
             		};            	
             		};
-            		if (bandera) {
+            		if (bandera&&document.getElementById('valor').value!='') {
             			procesar();
-            		};
+            		}else{
+                        swal("Campo vacio", "Ingrese el valor", "error");
+                    }
             }
         </script>
     </head>
@@ -158,7 +160,7 @@
                                 <?php include"fila.php"; ?>
                         </div>
                         <div class="panel-footer">
-				        <input type="text" name="valor" id="valor" class="form-control" placeholder="Valor..." >
+				        <input type="text" name="valor" id="valor" class="form-control" placeholder="Valor..." required>
                         </div>
                     </div>    
                 </div>
@@ -174,6 +176,7 @@
 <?php
   	if(isset($_REQUEST['fecha'])){
   	$fecha=$_REQUEST['fecha'];
+    $valor=$_REQUEST['valor'];
 	$debe;
 	$haber;
 	$codigo;
@@ -194,7 +197,7 @@
 }
     }
   		 include("../config/conexion.php");
-                            $result = pg_query($conexion, "insert into transacciones(fecha) values('$fecha')");
+                            $result = pg_query($conexion, "insert into transacciones(fecha, valor) values('$fecha', trim('$valor'))");
                                                           
                             if(!$result){
 				pg_query("rollback");

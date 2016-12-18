@@ -17,7 +17,7 @@
 			<?php
 		 include("../config/conexion.php");
 		 $cont=1;
-		  $query_s = pg_query($conexion, "select * from transacciones order by fecha");
+		  $query_s = pg_query($conexion, "select * from transacciones order by idtransaccion");
                             while ($fila = pg_fetch_array($query_s)) {
                              
                             
@@ -42,8 +42,12 @@
 											echo $fila2[0]." - ".$fila2[1]."-".$fila2[2]."<br>";
 										}
 											}
+											
 											?>
 
+										</div>
+										<div class="panel-footer">
+											<?php echo $fila[2]; ?>
 										</div>
 									</div>
 								</div>
