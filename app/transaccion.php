@@ -112,7 +112,7 @@
     </head>
 
     <body>
-    <?php include"menu.php"; ?>
+    <div class="container-fluid"><?php include"menu.php"; ?></div>
    <form action="" method="post" name="partidas" id="partidas">
     <div class="imagenFlotante">
         <a  name="add" id="add" data-toggle="modal" href="#fecha1" class="btn btn-primary">Procesar</a>

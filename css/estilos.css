@@ -7,12 +7,19 @@ body {
    bottom: 1em;
   position: fixed !important;
 }
-
+    nav{
+        height: 6em;
+        z-index: 2;
+    }
+    .logo{
+        margin-top: -15px
+    }
 	.panel{
 		border-color:#333;
 		}
-	.container{
-		padding-top:1em;
+	.container-fluid{
+		padding-left:0em;
+        padding-right:0em;
 		}
     .jumbotron{
         background-color: deepskyblue;
@@ -73,4 +80,7 @@ body {
         margin-top: -5em !important;
         padding-top: 5em !important;
     }
-    
+    .dropdown-toggle{
+        background-color: #2b2b2b !important; 
+        width: 100%;
+    }

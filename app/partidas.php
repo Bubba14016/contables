@@ -11,8 +11,9 @@
         <link rel="stylesheet" type="text/css" href="../css/sweetalert.css">
 </head>
 <body>
- <?php include"menu.php"; ?>
+<div class="container-fluid"><?php include"menu.php"; ?></div>
 		<div class="container">
+		
 		<div class="panel-group" id="acordion" role="tablist">
 			<?php
 		 include("../config/conexion.php");
