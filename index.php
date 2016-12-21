@@ -1,1 +1,1 @@
-<META HTTP-EQUIV="REFRESH" CONTENT="0;URL=http://localhost/contables/app/index.php"> 
+<META HTTP-EQUIV="REFRESH" CONTENT="0;URL=app/index.php"> 
