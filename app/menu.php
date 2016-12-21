@@ -8,7 +8,7 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="#"><img class="img-rounded" src="../imagenes/logo.png" height="300%" width="250px" class="logo"></a>
+    <a class="navbar-brand" href="index.php"><img class="img-rounded" src="../imagenes/logo.png" height="300%" width="250px" class="logo"></a>
   </div>
   	 <div class="collapse navbar-collapse navbar-ex1-collapse">
   	 <ul class="nav navbar-nav" id="navbar">
@@ -17,9 +17,10 @@
           Transacciones <b class="caret"></b>
         </a>
 		<ul class="dropdown-menu">
-          <li class="active"><a href="partidas.php" >Partidas</a></li>
+          <li class="active"><a href="partidas.php" >Gestionar Partidas</a></li>
 
-	<li class="active"><a href="transaccion.php" >Transaccion</a></li>
+	<li class="active"><a href="transaccion.php" >Nueva Partida</a></li>
+     <li class="active"><a href="../reportes/librodiario.php" target="_blank" >Libro Diario</a></li>
         </ul>
   	 </li>
 	
