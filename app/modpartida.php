@@ -90,27 +90,47 @@
                 var debe = sumarDebe();
                 var haber = sumarHaber();
                 if(debe-haber==0){
+					document.getElementById('bandera').value="edit";
                     document.partidas.submit();
 
                 }else{
                      swal("Revisar Cuentas", "Cargo y abono diferentes", "error");
                 }
             }
+			function validar(){
+            	var bandera=true;
+            	for (var i = 1; i <= 10; i++) {
+            		if (document.getElementById('codigo'+i).value==''&&(document.getElementById('haber'+i).value!=''
+            			||document.getElementById('haber'+i).value!='')) {
+            			 swal("Campo vacio", "Ingrese el nombre de una cuenta", "error");
+            			bandera=false;
+            			break;
+            		};            	
+            		};
+            		if (bandera&&document.getElementById('valor').value!='') {
+            			procesar();
+            		}else{
+                        swal("Campo vacio", "Ingrese el valor", "error");
+                    }
+            }
         </script>
 	<title>Modificar Partida</title>
 </head>
 <body>
 <div class="container-fluid"><?php include"menu.php"; ?></div>
-<form method="post" action="" name="frmod" id="frmod">
-	<div class="imagenFlotante">
-        <a  name="add" id="add" data-toggle="modal" href="#fecha1" class="btn btn-warning">Procesar</a>
+
+	 <div class="imagenFlotante">
+        <a  name="add" id="add" data-toggle="modal" href="#fecha1" class="btn btn-primary">Procesar</a>
     </div>
 	<div class="container">
+      <form action="" method="post" name="partidas" id="partidas">
+      <input type="hidden" name="bandera" id="bandera">
+       <input type="hidden" name="baccion" id="baccion" value="<?php echo $id; ?>">
 		<div class="panel panel-default">
 		<div class="panel-heading">
-			<h4 class="panel-tittle">
+			<h2 class="panel-tittle text-center">
 				Partida <?php echo $num; ?>
-			</h4>
+			</h2>
 		</div>
 		<br>
 		<div class="panel-body">
@@ -145,8 +165,37 @@
 </div>
 <br>
                             	<?php
+								$cont++;
                             }
                             ?>
+                            <?php
+                            for($i=$cont;$i<=10;$i++){
+								?>
+								<div class="row">
+<div class="col-md-6">
+    <input type="text" name="codigo<?php echo $i ?>" id="codigo<?php echo $i ?>"  class="form-control"  placeholder="codigo..." list="listaCodigo" autocomplete="off">
+    <datalist id="listaCodigo">
+                <?php
+                include("../config/conexion.php");
+				$query_s=pg_query($conexion,"select * from catalogo order by codigo");
+				while($fila=pg_fetch_array($query_s)){
+					echo " <option value='$fila[1] - $fila[0]'>";
+					}
+				?>
+
+    </datalist>
+</div>
+<div class="col-md-3">
+    <input type="text" name="debe<?php echo $i ?>"  id="debe<?php echo $i ?>" class="form-control" onKeyPress="anular(event,this)" onClick="anular2(this)" placeholder="0.00" >
+    </div>
+    <div class="col-md-3">
+    <input type="text" name="haber<?php echo $i ?>"  class="form-control" onKeyPress="anular(event,this)" onClick="anular2(this)" id="haber<?php echo $i ?>" placeholder="0.00"> 
+</div>
+</div>
+<br>
+								<?php
+								}
+							?>
                             </div>
 							<div class="panel-footer">
 								<input type="text" name="valor" id="valor" class="form-control" value="<?php echo $fila2[2]; ?>" placeholder="Valor..." required>
@@ -162,9 +211,134 @@
 
 	</div>
 	
-
+<div id="fecha1" class="modal fade" aria-hidden="true" tabindex="-1" role="dialog" aria-labelledby="basicModal">
+    <div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <a data-dismiss="modal" class="close">×</a>
+        <h3>Fecha de la Transaccion <i class="fa fa-calendar" aria-hidden="true"></i></h3>
+     </div>
+     <div class="modal-body">
+         <input type="date" name="fecha" id="fecha" class="form-control" required value="<?php echo date("Y-m-d"); ?>">              
+    </div>
+    <div class="modal-footer">
+        <a onClick="validar()" class="btn btn-success">Guardar</a>
+        <a href="#" data-dismiss="modal" class="btn">Cerrar</a>
+    </div>
+    </div>
+    </div>
+</div>
 </form>
 	 <script src="../js/jquery.min.js"></script>
         <script src="../js/bootstrap.min.js"></script>
 </body>
 </html>
+
+<?php
+  	if(isset($_REQUEST['fecha'])){
+  	$fecha=$_REQUEST['fecha'];
+    $valor=$_REQUEST['valor'];
+    $bandera=$_REQUEST['bandera'];	
+	 $baccion=$_REQUEST['baccion'];
+	$debe;
+	$haber;
+	$codigo;
+	
+    for($i=0;$i<10;$i++){
+    	if (isset($_POST['codigo'.($i+1)])&&$_POST['codigo'.($i+1)]!="") {
+            $codigo[]=$_REQUEST['codigo'.($i+1)];
+            
+        }
+        if (isset($_POST['debe'.($i+1)])&&$_POST['debe'.($i+1)]!="") {
+            $debe[]=$_REQUEST['debe'.($i+1)];
+            $haber[]=0;
+            
+        }
+       if(isset($_POST['haber'.($i+1)])&&$_POST['haber'.($i+1)]!=""){
+        	$haber[]=$_REQUEST['haber'.($i+1)];
+        	$debe[]=0;
+       
+}
+    }
+	if($bandera=="edit"){
+		
+		pg_query("BEGIN");
+			$result=pg_query($conexion,"delete from cuentas where idtransaccion='$baccion'");
+			
+			if(!$result){
+				pg_query("rollback");
+				}else{
+					pg_query("commit");
+					}
+					$result=pg_query($conexion,"delete from transacciones where idtransaccion='$baccion'");
+			if(!$result){
+				pg_query("rollback");
+				}else{
+					pg_query("commit");
+					
+					}
+  		 include("../config/conexion.php");
+                            $result = pg_query($conexion, "insert into transacciones(idtransaccion,fecha, valor, numeroc) values('$baccion','$fecha', trim('$valor'), $num)");
+                                                          
+                            if(!$result){
+				pg_query("rollback");
+				echo "<script language='javascript'>";
+				echo "swal('Uuuuuuyyyyiiii','Datos no almacenados', 'error');";
+				echo "</script>";
+				}else{
+					pg_query("commit");
+				
+					}
+                    $bandera1=true;       
+   			for ($i=0; $i < sizeof($codigo); $i++) { 
+   				$cod=cortar($codigo[$i]);
+   				if ($debe[$i]!=0) {
+   					 $result = pg_query($conexion, "insert into cuentas(codigo, idtransaccion, monto, c_a) values('$cod','$baccion', $debe[$i], 1)");
+   					 if(!$result){
+				pg_query("rollback");
+				$bandera1=false;
+				echo "<script language='javascript'>";
+				echo "swal('Uuuuuuyyyyiiii','Datos no almacenados', 'error');";
+				echo "</script>";
+				break;
+				}else{
+					pg_query("commit");
+				
+					}
+   				}else{
+   					if ($haber!=0) {
+   						 $result = pg_query($conexion, "insert into cuentas(codigo, idtransaccion, monto, c_a) values('$cod','$id', $haber[$i], 2)");
+   					 if(!$result){
+				pg_query("rollback");
+				$bandera1=false;
+				echo "<script language='javascript'>";
+				echo "swal('Uuuuuuyyyyiiii','Datos no almacenados', 'error');";
+				echo "</script>";
+				break;
+				}else{
+					pg_query("commit");
+				
+					}
+   					}
+   				}
+   				
+   			}
+   			if ($bandera1) {
+   				echo "<script language='javascript'>";
+				echo "swal('Hey...','Datos Modificados', 'success');";
+				echo "location.href='partidas.php';";
+				echo "</script>";
+   			}
+
+	}
+
+    }
+
+    	 function cortar($palabra){
+
+		$parte = explode(" ",$palabra); 
+
+		return $parte[0];
+    	}
+  
+?>

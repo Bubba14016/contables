@@ -23,7 +23,14 @@
      <li class="active"><a href="../reportes/librodiario.php" target="_blank" >Libro Diario</a></li>
         </ul>
   	 </li>
-	
+	<li>
+    <a href="../reportes/mayorizacion.php" target="_blank" >Libro Mayor</a>
+    	
+    </li>
+    <li>
+    <a href="backup.php" target="_blank" >Backup</a>
+    	
+    </li>
 
 	<ul class="nav navbar-nav">
 	</div>

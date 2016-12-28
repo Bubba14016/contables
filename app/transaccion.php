@@ -197,7 +197,7 @@
 }
     }
   		 include("../config/conexion.php");
-                            $result = pg_query($conexion, "insert into transacciones(fecha, valor) values('$fecha', trim('$valor'))");
+                            $result = pg_query($conexion, "insert into transacciones(fecha, valor, numeroc) values('$fecha', trim('$valor'), $num)");
                                                           
                             if(!$result){
 				pg_query("rollback");

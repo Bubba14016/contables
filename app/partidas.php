@@ -45,7 +45,7 @@
 									<div class="panel-heading" role="tab" id="heading<?php echo $cont; ?>">
 										<h4 class="panel-tittle">
 										<a href="#collapse<?php echo $cont; ?>" data-toggle="collapse" data-parent="#acordion">
-											Partida <?php echo $cont; ?>
+											Partida <?php echo $fila[3]; ?>
 										</a>
 										<div class="text-right">
 										<a class="btn btn-warning" onClick="llamarPaginaModificar('<?php echo $fila[0]; ?>',<?php echo $cont; ?>)">Modificar</a>
