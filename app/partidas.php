@@ -36,7 +36,7 @@
 			<?php
 		 include("../config/conexion.php");
 		 $cont=1;
-		  $query_s = pg_query($conexion, "select * from transacciones order by idtransaccion");
+		  $query_s = pg_query($conexion, "select DISTINCT(t.idtransaccion), t.fecha, t.valor, t.numeroc  from transacciones as t, cuentas where cuentas.estado=1 and cuentas.idtransaccion=t.idtransaccion order by t.idtransaccion");
                             while ($fila = pg_fetch_array($query_s)) {
                              
                             
@@ -57,7 +57,7 @@
 										<div class="panel-body">
 										<div class="col-md-6 text-left"><b>CUENTAS</b></div><div class="col-md-3  text-right"><b>DEBE</b></div><div class="col-md-3  text-right"><b>HABER</b></div>
 											<?php
-											 $query_2 = pg_query($conexion, "select cu.codigo, ca.nombre, cu.monto, cu.c_a FROM public.catalogo ca, public.cuentas cu, public.transacciones t WHERE t.idtransaccion='$fila[0]' and cu.idtransaccion= t.idtransaccion and cu.codigo=ca.codigo");
+											 $query_2 = pg_query($conexion, "select cu.codigo, ca.nombre, cu.monto, cu.c_a FROM public.catalogo ca, public.cuentas cu, public.transacciones t WHERE t.idtransaccion='$fila[0]' and cu.idtransaccion= t.idtransaccion and cu.codigo=ca.codigo and cu.estado=1");
 											 while ($fila2 = pg_fetch_array($query_2)) {
 											 	if ($fila2[3]==2) {
 											 		

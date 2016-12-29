@@ -1,3 +1,12 @@
+<?php
+$per;
+                            include("../config/conexion.php");
+                           $query_s = pg_query($conexion, "select * from empresa ");
+                            while ($fila = pg_fetch_array($query_s)) {
+                                $per = $fila[2] ;
+                               
+                                 }
+                            ?>
 <!doctype html>
 <html>
     <head>
@@ -92,6 +101,7 @@
                      swal("Revisar Cuentas", "Cargo y abono diferentes", "error");
                 }
             }
+			
             function validar(){
             	var bandera=true;
             	for (var i = 1; i <= 10; i++) {
@@ -100,8 +110,15 @@
             			 swal("Campo vacio", "Ingrese el nombre de una cuenta", "error");
             			bandera=false;
             			break;
-            		};            	
+            		}; 
+					          	
             		};
+					
+					if(document.getElementById('fecha').value.substring(0,4)!=document.getElementById('per').value){
+						bandera=false;
+						swal("Error", "Ingrese una fecha valida", "error");
+						 return;
+						}; 
             		if (bandera&&document.getElementById('valor').value!='') {
             			procesar();
             		}else{
@@ -114,6 +131,7 @@
     <body>
     <div class="container-fluid"><?php include"menu.php"; ?></div>
    <form action="" method="post" name="partidas" id="partidas">
+   <input type="hidden" name="per" id="per" value="<?php echo $per; ?>">
     <div class="imagenFlotante">
         <a  name="add" id="add" data-toggle="modal" href="#fecha1" class="btn btn-primary">Procesar</a>
     </div>
@@ -143,7 +161,7 @@
                     <div class="panel">
                         <div class="panel-heading text-center"><h1>Partida <?php
                             include("../config/conexion.php");
-                           $query_s = pg_query($conexion, "select count(idtransaccion) from transacciones ");
+                           $query_s = pg_query($conexion, "select COUNT(DISTINCT(idtransaccion)) from cuentas where estado=1");
                             while ($fila = pg_fetch_array($query_s)) {
                                 $num = $fila[0] + 1;
                                 echo " $num";
@@ -217,7 +235,7 @@
    			for ($i=0; $i < sizeof($codigo); $i++) { 
    				$cod=cortar($codigo[$i]);
    				if ($debe[$i]!=0) {
-   					 $result = pg_query($conexion, "insert into cuentas(codigo, idtransaccion, monto, c_a) values('$cod','$id', $debe[$i], 1)");
+   					 $result = pg_query($conexion, "insert into cuentas(codigo, idtransaccion, monto, c_a, estado) values('$cod','$id', $debe[$i], 1,1)");
    					 if(!$result){
 				pg_query("rollback");
 				$bandera=false;
@@ -231,7 +249,7 @@
 					}
    				}else{
    					if ($haber!=0) {
-   						 $result = pg_query($conexion, "insert into cuentas(codigo, idtransaccion, monto, c_a) values('$cod','$id', $haber[$i], 2)");
+   						 $result = pg_query($conexion, "insert into cuentas(codigo, idtransaccion, monto, c_a, estado) values('$cod','$id', $haber[$i], 2, 1)");
    					 if(!$result){
 				pg_query("rollback");
 				$bandera=false;
@@ -249,9 +267,9 @@
    			}
    			if ($bandera) {
    				echo "<script language='javascript'>";
-				echo "swal('Hey...','Datos Almacenados', 'success');";
-				//echo "location.href='transaccion.php';";
-				echo "</script>";
+				echo "swal('Hey...','Datos Almacenados', 'success', function(){;";
+				echo "location.href='transaccion.php';";
+				echo "})</script>";
    			}
 
 

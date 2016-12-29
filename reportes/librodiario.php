@@ -50,7 +50,7 @@ $emp;
   
 	<?php 
 			include("../config/conexion.php");
-		  $query_s = pg_query($conexion, "select * from transacciones order by idtransaccion");
+		  $query_s = pg_query($conexion, "select DISTINCT(t.idtransaccion), t.fecha, t.valor, t.numeroc  from transacciones as t, cuentas where cuentas.estado=1 and cuentas.idtransaccion=t.idtransaccion order by t.idtransaccion");
                             while ($fila2 = pg_fetch_array($query_s)) {
 								
   echo '<tr>

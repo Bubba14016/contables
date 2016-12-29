@@ -2,7 +2,15 @@
 	$id=$_REQUEST["iddatos"];
 	$num=$_REQUEST["num"];
 ?>
-
+<?php
+$per;
+                            include("../config/conexion.php");
+                           $query_s = pg_query($conexion, "select * from empresa ");
+                            while ($fila = pg_fetch_array($query_s)) {
+                                $per = $fila[2] ;
+                               
+                                 }
+                            ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -107,6 +115,11 @@
             			break;
             		};            	
             		};
+					if(document.getElementById('fecha').value.substring(0,4)!=document.getElementById('per').value){
+						bandera=false;
+						 swal("Error", "Ingrese una fecha valida", "error");
+						 return;
+						};
             		if (bandera&&document.getElementById('valor').value!='') {
             			procesar();
             		}else{
@@ -124,6 +137,7 @@
     </div>
 	<div class="container">
       <form action="" method="post" name="partidas" id="partidas">
+       <input type="hidden" name="per" id="per" value="<?php echo $per; ?>">
       <input type="hidden" name="bandera" id="bandera">
        <input type="hidden" name="baccion" id="baccion" value="<?php echo $id; ?>">
 		<div class="panel panel-default">
@@ -293,7 +307,7 @@
    			for ($i=0; $i < sizeof($codigo); $i++) { 
    				$cod=cortar($codigo[$i]);
    				if ($debe[$i]!=0) {
-   					 $result = pg_query($conexion, "insert into cuentas(codigo, idtransaccion, monto, c_a) values('$cod','$baccion', $debe[$i], 1)");
+   					 $result = pg_query($conexion, "insert into cuentas(codigo, idtransaccion, monto, c_a, estado) values('$cod','$baccion', $debe[$i], 1,1)");
    					 if(!$result){
 				pg_query("rollback");
 				$bandera1=false;
@@ -307,7 +321,7 @@
 					}
    				}else{
    					if ($haber!=0) {
-   						 $result = pg_query($conexion, "insert into cuentas(codigo, idtransaccion, monto, c_a) values('$cod','$id', $haber[$i], 2)");
+   						 $result = pg_query($conexion, "insert into cuentas(codigo, idtransaccion, monto, c_a, estado) values('$cod','$id', $haber[$i], 2, 1)");
    					 if(!$result){
 				pg_query("rollback");
 				$bandera1=false;
