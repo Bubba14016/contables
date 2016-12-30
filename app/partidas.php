@@ -57,7 +57,7 @@
 										<div class="panel-body">
 										<div class="col-md-6 text-left"><b>CUENTAS</b></div><div class="col-md-3  text-right"><b>DEBE</b></div><div class="col-md-3  text-right"><b>HABER</b></div>
 											<?php
-											 $query_2 = pg_query($conexion, "select cu.codigo, ca.nombre, cu.monto, cu.c_a FROM public.catalogo ca, public.cuentas cu, public.transacciones t WHERE t.idtransaccion='$fila[0]' and cu.idtransaccion= t.idtransaccion and cu.codigo=ca.codigo and cu.estado=1");
+											 $query_2 = pg_query($conexion, "select cu.codigo, ca.nombre, cu.monto, cu.c_a FROM public.catalogo ca, public.cuentas cu, public.transacciones t WHERE t.idtransaccion='$fila[0]' and cu.idtransaccion= t.idtransaccion and cu.codigo=ca.codigo and cu.estado=1  order by cu.c_a asc");
 											 while ($fila2 = pg_fetch_array($query_2)) {
 											 	if ($fila2[3]==2) {
 											 		

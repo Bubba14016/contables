@@ -61,7 +61,7 @@ $emp;
 	<td scope="col"><b>&nbsp;</b></td>
   </tr>';
   
-  $query_2 = pg_query($conexion, "select cu.codigo, ca.nombre, cu.monto, cu.c_a FROM public.catalogo ca, public.cuentas cu, public.transacciones t WHERE t.idtransaccion='$fila2[0]' and cu.idtransaccion= t.idtransaccion and cu.codigo=ca.codigo");
+  $query_2 = pg_query($conexion, "select cu.codigo, ca.nombre, cu.monto, cu.c_a FROM public.catalogo ca, public.cuentas cu, public.transacciones t WHERE t.idtransaccion='$fila2[0]' and cu.idtransaccion= t.idtransaccion and cu.codigo=ca.codigo order by cu.c_a asc");
                             	while ($fila3 = pg_fetch_array($query_2)) {
   ?>
   	<tr>
